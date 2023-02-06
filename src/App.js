@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import Dashboard from './containers/DashBoard';
 import { increment, decrement } from './store/slices/counter';
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
       <button onClick={() => dispatch(decrement())} type="button">
         Minus
       </button>
+
+      <Dashboard />
     </div>
   );
 }
