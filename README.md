@@ -1,6 +1,6 @@
 # Getting Started
 
-Make sure you are using node "node" : "16.13.2"
+Make sure you are using node "node" : "16.13.2" or higher
 
 ### `npm install`
 
