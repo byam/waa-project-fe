@@ -2,13 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import dummyData from '../dummy-data';
 
-function Properties() {
+function Properties(props) {
   const [properties, setProperties] = useState([]);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [propertyStatuses] = useState(
+    props?.propertyStatuses || ['available', 'pending', 'contingent']
+  );
 
   const fetchProperties = async () => {
-    setProperties(dummyData.properties);
+    setProperties(
+      dummyData.properties
+        .filter((property) => propertyStatuses.includes(property.status))
+        .slice(0, props?.propertyMaxNum || 100)
+    );
   };
 
   useEffect(() => {

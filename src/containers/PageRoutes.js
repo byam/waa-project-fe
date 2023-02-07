@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AdminDashboard from '../components/AdminDashboard';
 import Properties from '../components/Properties';
-import Customers from '../components/Customers';
+import Users from '../components/Users';
 import PropertyDetails from '../components/PropertyDetails';
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
@@ -15,7 +15,7 @@ export default function PageRoutes() {
       <Route path="/properties/:id" element={<PropertyDetails />} />
       <Route path="/properties/new" element={<PropertyNew />} />
       <Route path="/admin" element={<AdminDashboard />} />
-      <Route path="/customers" element={<Customers />} />
+      <Route path="/admin/users" element={<Users />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="*" element={<h1>404 Not Found</h1>} />
