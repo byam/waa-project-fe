@@ -6,6 +6,7 @@ import PropertyDetails from '../components/PropertyDetails';
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
 import PropertyNew from '../components/PropertyNew';
+import PropertiesSaved from '../components/PropertiesSaved';
 
 export default function PageRoutes() {
   return (
@@ -14,6 +15,7 @@ export default function PageRoutes() {
       <Route path="/properties" element={<Properties />} />
       <Route path="/properties/:id" element={<PropertyDetails />} />
       <Route path="/properties/new" element={<PropertyNew />} />
+      <Route path="/properties/saved" element={<PropertiesSaved />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />
       <Route path="/admin/users/:id/properties" element={<Properties />} />

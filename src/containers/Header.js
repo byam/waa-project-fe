@@ -1,8 +1,12 @@
 import { Popover } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon } from '@heroicons/react/24/outline';
+import { useContext } from 'react';
+import { CurrentUser } from '../context/CurrentUser';
 
 function Header() {
+  const curentUser = useContext(CurrentUser);
+
   return (
     <Popover className="relative bg-white">
       <div className="mx-auto max-w-7xl px-6">
@@ -30,21 +34,38 @@ function Header() {
             >
               Properties
             </Link>
-            <Link
-              to="/properties/new"
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Add Property
-            </Link>
-            <Link to="/admin" className="text-base font-medium text-gray-500 hover:text-gray-900">
-              Admin
-            </Link>
-            <Link
-              to="/admin/users"
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Users
-            </Link>
+            {curentUser?.role === 'customer' && (
+              <Link
+                to="/properties/saved"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                Saved Properties
+              </Link>
+            )}
+            {curentUser?.role === 'owner' && (
+              <Link
+                to="/properties/new"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                Add Property
+              </Link>
+            )}
+            {curentUser?.role === 'admin' && (
+              <>
+                <Link
+                  to="/admin"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Admin
+                </Link>
+                <Link
+                  to="/admin/users"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Users
+                </Link>
+              </>
+            )}
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             <Link
