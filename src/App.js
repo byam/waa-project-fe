@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import Dashboard from './containers/DashBoard';
 import { increment, decrement } from './store/slices/counter';
 import { notifyError, notifySuccess } from './helpers/notification';
@@ -29,7 +30,9 @@ function App() {
         Minus
       </button>
 
-      <Dashboard />
+      <BrowserRouter>
+        <Dashboard />
+      </BrowserRouter>
     </div>
   );
 }
