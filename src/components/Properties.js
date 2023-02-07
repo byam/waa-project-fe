@@ -35,18 +35,17 @@ function Properties(props) {
     }
   };
 
-  const heartIcon = (property) =>
-    currentUser.favorites.includes(property.id) ? (
-      <HeartIcon
-        className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"
-        onClick={() => heartClick(property)}
-      />
-    ) : (
-      <HeartIcon
-        className="h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
-        onClick={() => heartClick(property)}
-      />
-    );
+  // const heartIcon = ((property) => (currentUser.favorites.includes(property.id) ? (
+  //   <HeartIcon
+  //     className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"
+  //     onClick={() => heartClick(property)}
+  //   />
+  // ) : (
+  //   <HeartIcon
+  //     className="h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
+  //     onClick={() => heartClick(property)}
+  //   />
+  // )));
 
   useEffect(() => {
     fetchProperties();
@@ -117,7 +116,18 @@ function Properties(props) {
                   <h3 className="mt-4 text-sm text-gray-700">{p.title}</h3>
                   <p className="mt-1 text-lg font-medium text-gray-900">${p.price}</p>
                 </Link>
-                {currentUser?.role === 'customer' && heartIcon(p)}
+                {currentUser?.role === 'customer' &&
+                  (currentUser.favorites.includes(p.id) ? (
+                    <HeartIcon
+                      className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"
+                      onClick={() => heartClick(p)}
+                    />
+                  ) : (
+                    <HeartIcon
+                      className="h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
+                      onClick={() => heartClick(p)}
+                    />
+                  ))}
               </div>
             ))}
           </div>

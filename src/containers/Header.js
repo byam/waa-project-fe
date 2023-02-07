@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { CurrentUser } from '../context/CurrentUser';
 
 function Header() {
-  const curentUser = useContext(CurrentUser);
+  const currentUser = useContext(CurrentUser);
 
   return (
     <Popover className="relative bg-white">
@@ -34,7 +34,7 @@ function Header() {
             >
               Properties
             </Link>
-            {curentUser?.role === 'customer' && (
+            {currentUser?.role === 'customer' && (
               <Link
                 to="/properties/saved"
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
@@ -42,7 +42,7 @@ function Header() {
                 Saved Properties
               </Link>
             )}
-            {curentUser?.role === 'owner' && (
+            {currentUser?.role === 'owner' && (
               <Link
                 to="/properties/new"
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
@@ -50,7 +50,7 @@ function Header() {
                 Add Property
               </Link>
             )}
-            {curentUser?.role === 'admin' && (
+            {currentUser?.role === 'admin' && (
               <>
                 <Link
                   to="/admin"
