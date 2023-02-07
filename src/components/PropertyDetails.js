@@ -16,12 +16,12 @@ function PropertyDetails() {
   }, [params.id]);
 
   return (
-    <div>
+    <div className="p-5 text-center">
       <h1>Property Details</h1>
       <h2>{property.title}</h2>
       <p>{property.description}</p>
       <p>{property.price}</p>
-      <img src={property.imageSrc} alt={property.title} />
+      <img className="block mx-auto w-1/4" src={property.imageSrc} alt={property.title} />
     </div>
   );
 }

@@ -34,6 +34,11 @@ httpClient.interceptors.response.use(
 
     if (parseInt(status, 10) === 401) {
       cookies.remove('access_token');
+      notifyError('You are not authorized');
+    }
+
+    if (parseInt(status, 10) === 403) {
+      notifyError("You don't  have permission to this resource!");
     }
 
     if (parseInt(status, 10) === 500) {
