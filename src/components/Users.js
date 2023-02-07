@@ -11,6 +11,7 @@ function Users(props) {
     setUsers(
       dummyData.users
         .filter((user) => userRoles.includes(user.role))
+        .map((user) => ({ ...user, key: user.id }))
         .slice(0, props?.usersMaxNum || 100)
     );
   };
