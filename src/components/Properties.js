@@ -35,18 +35,6 @@ function Properties(props) {
     }
   };
 
-  // const heartIcon = ((property) => (currentUser.favorites.includes(property.id) ? (
-  //   <HeartIcon
-  //     className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"
-  //     onClick={() => heartClick(property)}
-  //   />
-  // ) : (
-  //   <HeartIcon
-  //     className="h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
-  //     onClick={() => heartClick(property)}
-  //   />
-  // )));
-
   useEffect(() => {
     fetchProperties();
   }, [params?.id, currentUser, flag]);
