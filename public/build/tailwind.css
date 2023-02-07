@@ -1180,6 +1180,10 @@ select {
   padding-right: 2rem;
 }
 
+.pt-4 {
+  padding-top: 1rem;
+}
+
 .pl-3 {
   padding-left: 0.75rem;
 }

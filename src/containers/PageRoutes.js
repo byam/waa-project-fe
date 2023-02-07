@@ -7,6 +7,7 @@ import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
 import PropertyNew from '../components/PropertyNew';
 import PropertiesSaved from '../components/PropertiesSaved';
+import Test from '../components/Test';
 
 export default function PageRoutes() {
   return (
@@ -21,6 +22,7 @@ export default function PageRoutes() {
       <Route path="/admin/users/:id/properties" element={<Properties />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/test" element={<Test />} />
       <Route path="*" element={<h1>404 Not Found</h1>} />
     </Routes>
   );
