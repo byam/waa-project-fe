@@ -47,7 +47,7 @@ function PropertyNew() {
                   <div className="col-span-6 sm:col-span-3">
                     Listing Type
                     <select
-                      required="true"
+                      required
                       id="listingType"
                       name="listingType"
                       autoComplete="listingType"
@@ -63,7 +63,7 @@ function PropertyNew() {
                   <div className="col-span-6 sm:col-span-3">
                     Property Type
                     <select
-                      required="true"
+                      required
                       id="propertyType"
                       name="propertyType"
                       autoComplete="propertyType"
@@ -84,7 +84,7 @@ function PropertyNew() {
                       name="title"
                       id="title"
                       autoComplete="title"
-                      required="true"
+                      required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -97,7 +97,7 @@ function PropertyNew() {
                       name="description"
                       id="description"
                       autoComplete="description"
-                      required="true"
+                      required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -111,7 +111,7 @@ function PropertyNew() {
                       name="price"
                       id="price"
                       autoComplete="price"
-                      required="true"
+                      required
                       onChange={handleChange}
                     />
                   </div>
@@ -123,7 +123,7 @@ function PropertyNew() {
                       name="address"
                       id="address"
                       autoComplete="address-level3"
-                      required="true"
+                      required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       onChange={handleChange}
                     />
@@ -136,7 +136,7 @@ function PropertyNew() {
                       name="city"
                       id="city"
                       onChange={handleChange}
-                      required="true"
+                      required
                       autoComplete="address-level2"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
@@ -149,7 +149,7 @@ function PropertyNew() {
                       name="state"
                       id="state"
                       onChange={handleChange}
-                      required="true"
+                      required
                       autoComplete="address-level1"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
@@ -162,7 +162,7 @@ function PropertyNew() {
                       name="zip"
                       id="zip"
                       onChange={handleChange}
-                      required="true"
+                      required
                       autoComplete="postal-code"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />

@@ -1,11 +1,14 @@
 import { Popover } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon } from '@heroicons/react/24/outline';
+import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { CurrentUser } from '../context/CurrentUser';
 import { signOut } from '../store/slices/auth';
 import { notifySuccess } from '../helpers/notification';
 
 function Header() {
+  const currentUser = useContext(CurrentUser);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -43,21 +46,38 @@ function Header() {
             >
               Properties
             </Link>
-            <Link
-              to="/properties/new"
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Add Property
-            </Link>
-            <Link to="/admin" className="text-base font-medium text-gray-500 hover:text-gray-900">
-              Admin
-            </Link>
-            <Link
-              to="/admin/users"
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Users
-            </Link>
+            {currentUser?.role === 'customer' && (
+              <Link
+                to="/properties/saved"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                Saved Properties
+              </Link>
+            )}
+            {currentUser?.role === 'owner' && (
+              <Link
+                to="/properties/new"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                Add Property
+              </Link>
+            )}
+            {currentUser?.role === 'admin' && (
+              <>
+                <Link
+                  to="/admin"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Admin
+                </Link>
+                <Link
+                  to="/admin/users"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Users
+                </Link>
+              </>
+            )}
           </Popover.Group>
           {!user.email ? (
             <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">

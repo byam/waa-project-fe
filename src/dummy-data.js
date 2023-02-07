@@ -53,6 +53,7 @@ const dummyData = {
       lastName: 'customer1',
       email: 'customer1@email.com',
       role: 'customer',
+      favorites: [3],
     },
     {
       id: 3,
