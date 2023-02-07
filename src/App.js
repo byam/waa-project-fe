@@ -20,8 +20,6 @@ function App() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Hello WAA!</h1>
-
       <div>Counter: {counter}</div>
       <button onClick={handleAddClick} type="button">
         Plus

@@ -21,7 +21,7 @@ function PropertyDetails() {
       <h2>{property.title}</h2>
       <p>{property.description}</p>
       <p>{property.price}</p>
-      <img src={property.image} alt={property.title} />
+      <img src={property.imageSrc} alt={property.title} />
     </div>
   );
 }
