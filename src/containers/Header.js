@@ -39,6 +39,12 @@ function Header() {
             <Link to="/admin" className="text-base font-medium text-gray-500 hover:text-gray-900">
               Admin
             </Link>
+            <Link
+              to="/admin/users"
+              className="text-base font-medium text-gray-500 hover:text-gray-900"
+            >
+              Users
+            </Link>
           </Popover.Group>
           <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
             <Link

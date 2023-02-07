@@ -1,19 +1,26 @@
-import { useState } from 'react';
-import dummyData from '../dummy-data';
-import Customers from './Customers';
+import Users from './Users';
 import Properties from './Properties';
 
 function AdminDashboard() {
-  const [user] = useState(dummyData.users[0]);
+  const propertyMaxNum = 2;
+  const propertyStatuses = ['contingent'];
+  const usersMaxNum = 2;
+  const userRoles = ['customer'];
 
   return (
     <div>
-      <h1>Admin Dashboard</h1>
-      <p>{user.firstName}</p>
-      <h2>Properties</h2>
-      <Properties />
-      <h2>Customers</h2>
-      <Customers />
+      <div className="px-4 py-5 sm:px-6">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
+          Recent Contingent Properties
+        </h3>
+        <p className="mt-1 max-w-2xl text-sm text-gray-500">Displaying latest {propertyMaxNum}</p>
+      </div>
+      <Properties propertyMaxNum={propertyMaxNum} propertyStatuses={propertyStatuses} />
+      <div className="px-4 py-5 sm:px-6">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">Recent Customers</h3>
+        <p className="mt-1 max-w-2xl text-sm text-gray-500">Displaying latest {usersMaxNum}</p>
+      </div>
+      <Users usersMaxNum={usersMaxNum} userRoles={userRoles} />
     </div>
   );
 }
