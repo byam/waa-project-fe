@@ -30,6 +30,12 @@ function Header() {
             >
               Properties
             </Link>
+            <Link
+              to="/properties/new"
+              className="text-base font-medium text-gray-500 hover:text-gray-900"
+            >
+              Add Property
+            </Link>
             <Link to="/admin" className="text-base font-medium text-gray-500 hover:text-gray-900">
               Admin
             </Link>
