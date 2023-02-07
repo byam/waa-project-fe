@@ -8,6 +8,7 @@ const dummyData = {
       description:
         'Tall slender porcelain bottle with natural clay textured body and cork stopper.',
       status: 'available',
+      owner: 3,
     },
     {
       id: 2,
@@ -16,6 +17,7 @@ const dummyData = {
       imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
       description: 'Olive drab green insulated bottle with flared screw lid and flat top.',
       status: 'available',
+      owner: 3,
     },
     {
       id: 3,
@@ -24,6 +26,7 @@ const dummyData = {
       imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg',
       description: 'Person using a pen to cross a task off a productivity paper card.',
       status: 'available',
+      owner: 3,
     },
     {
       id: 4,
@@ -32,6 +35,7 @@ const dummyData = {
       imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
       description: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
       status: 'contingent',
+      owner: 4,
     },
   ],
 
@@ -55,6 +59,13 @@ const dummyData = {
       firstName: 'owner1',
       lastName: 'owner1',
       email: 'owner1@email.com',
+      role: 'owner',
+    },
+    {
+      id: 4,
+      firstName: 'owner2',
+      lastName: 'owner2',
+      email: 'owner2@email.com',
       role: 'owner',
     },
   ],

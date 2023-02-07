@@ -16,6 +16,7 @@ export default function PageRoutes() {
       <Route path="/properties/new" element={<PropertyNew />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />
+      <Route path="/admin/users/:id/properties" element={<Properties />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="*" element={<h1>404 Not Found</h1>} />

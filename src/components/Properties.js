@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router';
 import dummyData from '../dummy-data';
 
 function Properties(props) {
+  const params = useParams();
   const [properties, setProperties] = useState([]);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -13,14 +15,16 @@ function Properties(props) {
   const fetchProperties = async () => {
     setProperties(
       dummyData.properties
+        .filter((property) => property.owner === parseInt(params?.id, 10) || !params?.id)
         .filter((property) => propertyStatuses.includes(property.status))
         .slice(0, props?.propertyMaxNum || 100)
     );
   };
 
   useEffect(() => {
+    console.log(params);
     fetchProperties();
-  }, []);
+  }, [params?.id]);
 
   return (
     <div>

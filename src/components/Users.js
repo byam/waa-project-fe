@@ -49,6 +49,9 @@ function Users(props) {
           <Link to="/properties">Activate {record.name}</Link>
           <Link to="/properties">Deactivate {record.name}</Link>
           <Link to="/properties">Reset Password {record.name}</Link>
+          {record.role === 'owner' && (
+            <Link to={`/admin/users/${record.id}/properties`}>Properties {record.name}</Link>
+          )}
         </Space>
       ),
     },
