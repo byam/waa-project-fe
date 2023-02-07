@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import dummyProperties from '../dummy-data';
+import dummyData from '../dummy-data';
 
 function PropertyDetails() {
   const params = useParams();
   const [property, setProperty] = useState({});
 
   const fetchProperty = async () => {
-    const data = dummyProperties.find((p) => p.id === parseInt(params.id, 10));
+    const data = dummyData.properties.find((p) => p.id === parseInt(params.id, 10));
     setProperty(data);
   };
 

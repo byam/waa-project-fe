@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import dummyProperties from '../dummy-data';
+import dummyData from '../dummy-data';
 import Property from './Property';
 
 function Properties() {
   const [properties, setProperties] = useState([]);
 
   const fetchProperties = async () => {
-    setProperties(dummyProperties);
+    setProperties(dummyData.properties);
   };
 
   useEffect(() => {
@@ -15,17 +15,19 @@ function Properties() {
   }, []);
 
   return (
-    <div>
+    <div className="grid grid-cols-4 gap-4">
       {properties.map((property) => (
-        <Link to={`/properties/${property.id}`} key={property.id}>
-          <Property
-            key={property.id}
-            title={property.title}
-            description={property.description}
-            price={property.price}
-            image={property.image}
-          />
-        </Link>
+        <div key={property.id}>
+          <Link to={`/properties/${property.id}`} key={property.id}>
+            <Property
+              key={property.id}
+              title={property.title}
+              description={property.description}
+              price={property.price}
+              image={property.image}
+            />
+          </Link>
+        </div>
       ))}
     </div>
   );
