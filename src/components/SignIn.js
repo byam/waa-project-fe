@@ -44,7 +44,7 @@ function SignIn() {
         throw new Error('No token returned from backend');
       }
 
-      handleSuccessfulLogin({ ...res.data, email });
+      handleSuccessfulLogin(res.data);
     } catch (err) {
       notifyError('Failed to sign-in to system');
       console.log(err);
