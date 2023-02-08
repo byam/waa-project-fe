@@ -34,7 +34,6 @@ httpClient.interceptors.response.use(
     const { status } = response ?? {};
 
     if (parseInt(status, 10) === 401) {
-      cookies.remove(ACCESS_TOKEN);
       notifyError('You are not authorized');
     }
 
