@@ -1,93 +1,94 @@
 /* eslint-disable operator-linebreak */
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router';
-import { HeartIcon } from '@heroicons/react/24/outline';
-import { useSelector } from 'react-redux';
-import dummyData from '../dummy-data';
-import { PROPERTY_STATUS, USER_ROLES } from '../app/constants';
+import { httpGet } from '../api';
+import Property from './Property';
 
-function Properties(props) {
-  const auth = useSelector((state) => state.auth);
-  const user = auth.user || {};
-  const isCustomer = USER_ROLES.CUSTOMER === user.role;
+function Properties() {
+  const [formData, setFormData] = useState({
+    listing_type: '',
+    property_type: '',
+    min_price: '',
+    max_price: '',
+  });
 
-  const [flag, setFlag] = useState(0);
-
-  // TODO: fetch user
-  const currentUser = dummyData.users.filter((u) => u.email === user.email)[0];
-
-  const params = useParams();
   const [properties, setProperties] = useState([]);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [propertyStatuses] = useState(props?.propertyStatuses || [PROPERTY_STATUS.AVAILABLE]);
 
-  const fetchProperties = async () => {
-    setProperties(
-      dummyData.properties
-        .filter((property) => property.owner === parseInt(params?.id, 10) || !params?.id)
-        .filter((property) => propertyStatuses.includes(property.propertyStatus))
-        .slice(0, props?.propertyMaxNum || 100)
-    );
-  };
-
-  const heartClick = (property) => {
-    if (currentUser.favorites.includes(property.id)) {
-      currentUser.favorites = currentUser.favorites.filter((item) => item !== property.id);
-      setFlag(flag + 1);
-    } else {
-      currentUser.favorites.push(property.id);
-      setFlag(flag + 1);
-    }
+  const fetchProperties = async (params = {}) => {
+    const res = await httpGet({
+      url: '/properties',
+      params,
+    });
+    setProperties(res.data);
   };
 
   useEffect(() => {
     fetchProperties();
-  }, [params?.id, currentUser, flag]);
+  }, []);
+
+  const renderProperties = () => {
+    if (!properties.length) return <div>No properties</div>;
+
+    return properties.map((p) => <Property key={p.id} p={p} />);
+  };
+
+  const handleFilterChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleFilterSubmit = async (e) => {
+    e.preventDefault();
+    await fetchProperties(formData);
+  };
 
   return (
     <div>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
           <h2 className="sr-only">ps</h2>
-          <form className="flex items-center">
+          <form onSubmit={handleFilterSubmit} className="flex items-center">
             <div className="w-1/4 mr-10 mb-10">
               <select
                 className="form-select block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded-lg shadow-sm focus:outline-none focus:shadow-outline"
-                id="category"
+                name="listing_type"
+                value={formData.listing_type}
+                onChange={handleFilterChange}
               >
-                <option>Listing Type</option>
-                <option>Sale</option>
-                <option>Rent</option>
+                <option value="">Listing Type</option>
+                <option>SALE</option>
+                <option>RENT</option>
               </select>
             </div>
             <div className="w-1/4 mr-10 mb-10">
               <select
                 className="form-select block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded-lg shadow-sm focus:outline-none focus:shadow-outline"
-                id="category"
+                name="property_type"
+                value={formData.property_type}
+                onChange={handleFilterChange}
               >
-                <option>Property Type</option>
-                <option>House</option>
-                <option>Apartment</option>
-                <option>Condo</option>
+                <option value="">Property Type</option>
+                <option>HOUSE</option>
+                <option>APARTMENT</option>
+                <option>CONDO</option>
               </select>
             </div>
             <input
               type="number"
               className="w-1/6 mr-10 mb-10 form-input block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded-lg shadow-sm focus:outline-none focus:shadow-outline"
-              id="maxPrice"
-              value={minPrice}
+              name="min_price"
+              value={formData.min_price}
               placeholder="Min Price..."
-              onChange={(e) => setMinPrice(e.target.value)}
+              onChange={handleFilterChange}
             />
             <input
               type="number"
               className="w-1/6 mr-10 mb-10 form-input block w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded-lg shadow-sm focus:outline-none focus:shadow-outline"
-              id="maxPrice"
-              value={maxPrice}
+              name="max_price"
+              value={formData.max_price}
               placeholder="Max Price..."
-              onChange={(e) => setMaxPrice(e.target.value)}
+              onChange={handleFilterChange}
             />
             <button
               type="submit"
@@ -98,33 +99,7 @@ function Properties(props) {
           </form>
 
           <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-            {properties.map((p) => (
-              <div key={p.id}>
-                <Link key={p.id} to={`/properties/${p.id}`} className="group">
-                  <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
-                    <img
-                      src={p.imageSrcs[0]}
-                      alt={p.description}
-                      className="h-full w-full object-cover object-center group-hover:opacity-75"
-                    />
-                  </div>
-                  <h3 className="mt-4 text-sm text-gray-700">{p.title}</h3>
-                  <p className="mt-1 text-lg font-medium text-gray-900">${p.price}</p>
-                </Link>
-                {isCustomer &&
-                  (currentUser.favorites.includes(p.id) ? (
-                    <HeartIcon
-                      className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"
-                      onClick={() => heartClick(p)}
-                    />
-                  ) : (
-                    <HeartIcon
-                      className="h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
-                      onClick={() => heartClick(p)}
-                    />
-                  ))}
-              </div>
-            ))}
+            {renderProperties()}
           </div>
         </div>
       </div>

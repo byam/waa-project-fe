@@ -1,26 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
-import dummyData from '../dummy-data';
+import { httpGet } from '../api';
 
 function Offers() {
-  const auth = useSelector((state) => state.auth);
-  const user = auth.user || {};
-
-  // TODO: fetch user
-  const currentUser = dummyData.users.filter((u) => u.email === user.email)[0];
+  // const auth = useSelector((state) => state.auth);
+  // const user = auth.user || {};
 
   const [offers, setOffers] = useState([]);
   const [flag] = useState(0);
 
   const fetchOffers = async () => {
-    // TODO: integrate with backend
-    setOffers(
-      dummyData.offers
-        .filter((offer) => offer.customerUserId === currentUser.id)
-        .map((offer) => ({ ...offer, key: offer.id }))
-    );
+    const res = await httpGet({
+      url: '/offers',
+    });
+    setOffers(res.data || []);
   };
 
   const columns = [

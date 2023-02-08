@@ -20,11 +20,8 @@ export const authSlice = createSlice({
       cookies.remove(ACCESS_TOKEN);
       state.user = {};
     },
-    signUp: (state, action) => {
-      state.user = action.payload;
-    },
   },
 });
 
-export const { signIn, signOut, signUp } = authSlice.actions;
+export const { signIn, signOut } = authSlice.actions;
 export default authSlice.reducer;

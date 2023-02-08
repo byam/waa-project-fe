@@ -1,39 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
 import { notifyError, notifySuccess } from '../helpers/notification';
-import { signUp } from '../store/slices/auth';
+import { httpPost } from '../api';
 
 function SignUp() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
-    country: 'United States',
-    street: '',
-    city: '',
-    region: '',
-    zipCode: '',
+    password: '',
+    isOwner: false,
   });
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleSignupInputChange = (e) => {
+    let { value } = e.target;
+    if (e.target.name === 'isOwner') {
+      value = e.target.checked;
+    }
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     });
   };
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData);
-      // await TODO: signup API call
-      dispatch(signUp(formData));
+      await httpPost({
+        url: '/authenticate/register',
+        data: formData,
+      });
       notifySuccess('Successfully signed up');
       // replace: true means Browser navigation history will be cleared
-      navigate('/', { replace: true });
+      navigate('/sign-in', { replace: true });
     } catch (err) {
       notifyError(`Error while signing up ${err}`);
     }
@@ -48,28 +46,6 @@ function SignUp() {
               <div className="bg-white px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-6 gap-6">
                   <div className="col-span-6 sm:col-span-3">
-                    First name
-                    <input
-                      type="text"
-                      name="firstName"
-                      onChange={handleSignupInputChange}
-                      value={formData.firstName}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6 sm:col-span-3">
-                    Last name
-                    <input
-                      type="text"
-                      name="lastName"
-                      onChange={handleSignupInputChange}
-                      value={formData.lastName}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6 sm:col-span-4">
                     Email address
                     <input
                       type="text"
@@ -81,61 +57,28 @@ function SignUp() {
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
-                    Country
-                    <select
-                      name="country"
+                    Password
+                    <input
+                      type="password"
+                      name="password"
                       onChange={handleSignupInputChange}
-                      value={formData.country}
-                      className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option>United States</option>
-                      <option>Canada</option>
-                      <option>Mexico</option>
-                    </select>
+                      value={formData.password}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
                   </div>
 
                   <div className="col-span-6">
-                    Street address
-                    <input
-                      type="text"
-                      name="street"
-                      onChange={handleSignupInputChange}
-                      value={formData.street}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                    City
-                    <input
-                      type="text"
-                      name="city"
-                      onChange={handleSignupInputChange}
-                      value={formData.city}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                    State / Province
-                    <input
-                      type="text"
-                      name="region"
-                      onChange={handleSignupInputChange}
-                      value={formData.region}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-
-                  <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                    ZIP / Postal code
-                    <input
-                      type="text"
-                      name="zipCode"
-                      onChange={handleSignupInputChange}
-                      value={formData.zipCode}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
+                    {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                    <label>
+                      <input
+                        id="isOwner"
+                        type="checkbox"
+                        name="isOwner"
+                        onChange={handleSignupInputChange}
+                        checked={formData.isOwner}
+                      />{' '}
+                      I am an owner
+                    </label>
                   </div>
                 </div>
               </div>

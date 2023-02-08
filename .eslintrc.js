@@ -23,5 +23,6 @@ module.exports = {
     'react/prop-types': 'off',
     'react/destructuring-assignment': [0, 'never'],
     'global-require': 0,
+    'no-unused-vars': 1,
   },
 };
