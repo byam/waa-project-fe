@@ -26,6 +26,7 @@ export const OFFER_STATUS = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
+  CANCEL: 'CANCEL',
 };
 
 export const ACCESS_TOKEN = 'accessToken';
