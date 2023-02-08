@@ -2,8 +2,12 @@ import { LockClosedIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
+import Cookies from 'universal-cookie';
+import jwtDecode from 'jwt-decode';
 import { notifyError, notifySuccess } from '../helpers/notification';
 import { signIn } from '../store/slices/auth';
+import { httpPost } from '../api';
+import { ACCESS_TOKEN } from '../app/constants';
 
 function SignIn() {
   const [email, setEmail] = useState('');
@@ -12,24 +16,38 @@ function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleSuccessfulLogin = (data) => {
+    const cookies = new Cookies();
+    const { accessToken } = data || {};
+    const jwt = jwtDecode(accessToken);
+
+    cookies.set(ACCESS_TOKEN, accessToken, {
+      path: '/',
+      expires: new Date(jwt.exp * 1000),
+    });
+
+    dispatch(signIn({ ...jwt, email: jwt.sub }));
+    notifySuccess('Successfully signed in');
+    navigate('/', { replace: true });
+  };
+
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const body = { email, password };
-      console.log(body);
-      // await login()
-      dispatch(
-        signIn({
-          email: 'ismoil.shokirov@miu.edu',
-          firstName: 'Ismoil',
-          lastName: 'Shokirov',
-        })
-      );
-      notifySuccess('Successfully signed in');
-      navigate('/', { replace: true });
+      const payload = { email, password };
+      const res = await httpPost({
+        url: '/authenticate/login',
+        data: payload,
+      });
+
+      if (!res.data.accessToken) {
+        throw new Error('No token returned from backend');
+      }
+
+      handleSuccessfulLogin(res.data);
     } catch (err) {
-      notifyError(`Sign in error ${err}`);
+      notifyError('Failed to sign-in to system');
+      console.log(err);
     }
   };
 

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CurrentUser } from '../context/CurrentUser';
 import { signOut } from '../store/slices/auth';
 import { notifySuccess } from '../helpers/notification';
+import { USER_ROLES } from '../app/constants';
 
 function Header() {
   const currentUser = useContext(CurrentUser);
@@ -18,6 +19,15 @@ function Header() {
     dispatch(signOut());
     notifySuccess('Successfully signed out');
   };
+
+  const isAdmin = USER_ROLES.ADMIN === user.role;
+  const isOwner = USER_ROLES.OWNER === user.role;
+  const isCustomer = USER_ROLES.CUSTOMER === user.role;
+
+  // TODO: Restrict Header links by ROlE
+  console.log('isAdmin', isAdmin);
+  console.log('isOwner', isOwner);
+  console.log('isCustomer', isCustomer);
 
   return (
     <Popover className="relative bg-white">
