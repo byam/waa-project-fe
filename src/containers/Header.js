@@ -72,6 +72,14 @@ function Header() {
                 Add Property
               </Link>
             )}
+            {isOwner && (
+              <Link
+                to="/properties/owner"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                My Properties
+              </Link>
+            )}
             {isAdmin && (
               <>
                 <Link
