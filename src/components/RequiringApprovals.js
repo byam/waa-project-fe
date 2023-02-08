@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Table, Space, Button, Modal } from 'antd';
