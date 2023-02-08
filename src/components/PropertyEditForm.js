@@ -23,6 +23,7 @@ function PropertyEditForm(props) {
   };
 
   const handleUpdateProperty = async () => {
+    console.log('handleUpdateProperty ', property);
     try {
       const res = await httpPut({
         url: `/properties/${props.property.id}`,
@@ -138,6 +139,19 @@ function PropertyEditForm(props) {
                       id="description"
                       defaultValue={props.property?.description || ''}
                       autoComplete="description"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-span-6">
+                    Image URL
+                    <input
+                      type="text"
+                      name="image"
+                      id="image"
+                      defaultValue={props.property?.image || ''}
                       required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       onChange={handleChange}

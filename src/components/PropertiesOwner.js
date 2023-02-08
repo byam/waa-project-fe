@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { USER_ROLES } from '../app/constants';
-import { httpGet } from '../api';
-import { notifyError } from '../helpers/notification';
+import { Button, Modal } from 'antd';
+import { PROPERTY_STATUS, USER_ROLES } from '../app/constants';
+import { httpDelete, httpGet } from '../api';
+import { notifyError, notifySuccess } from '../helpers/notification';
+import Property from './Property';
 
 function PropertiesOwner() {
   const navigate = useNavigate();
@@ -13,6 +15,34 @@ function PropertiesOwner() {
   const isOwner = USER_ROLES.OWNER === user.role;
 
   const [properties, setProperties] = useState([]);
+
+  const [flag, setFlag] = useState(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleDelete = (propertyId) => async () => {
+    console.log('handleDelete:', propertyId);
+    try {
+      const res = await httpDelete({
+        url: `properties/${propertyId}`,
+      });
+      if (res.data) {
+        console.log('Deleted:', res.data);
+        notifySuccess('Deleted successfully');
+        setIsModalOpen(false);
+        setFlag(flag + 1);
+      }
+    } catch (err) {
+      notifyError('Failed to delete');
+      console.log(err);
+    }
+  };
 
   const fetchProperties = async () => {
     if (isOwner) {
@@ -34,7 +64,7 @@ function PropertiesOwner() {
 
   useEffect(() => {
     fetchProperties();
-  }, [user]);
+  }, [user, flag]);
 
   return (
     <div>
@@ -45,26 +75,26 @@ function PropertiesOwner() {
           <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {properties.map((p) => (
               <div key={p.id}>
-                <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
-                  <img
-                    src={p.imageSrcs?.[0]}
-                    alt={p.description}
-                    className="h-full w-full object-cover object-center group-hover:opacity-75"
-                  />
-                </div>
-                <h3 className="mt-4 text-sm text-gray-700">
-                  {p.title} ({p.propertyStatus})
-                </h3>
-                <p className="mt-1 text-lg font-medium text-gray-900">${p.price}</p>
+                <Property key={p.id} p={p} />
+                <Button onClick={() => handleEdit(p.id)} type="default">
+                  Edit
+                </Button>{' '}
+                {p.propertyStatus !== PROPERTY_STATUS.PENDING && (
+                  <div>
+                    <Button onClick={showModal} type="default">
+                      Delete
+                    </Button>
 
-                <button
-                  onClick={() => handleEdit(p.id)}
-                  className="mt-1 text-sm font-medium text-gray-900"
-                  type="submit"
-                >
-                  {' '}
-                  Edit{' '}
-                </button>
+                    <Modal
+                      title={`Deleting this "${p.title}" ?`}
+                      open={isModalOpen}
+                      onOk={handleDelete(p.id)}
+                      onCancel={handleCancel}
+                      okType="danger"
+                      okText="Delete"
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>
