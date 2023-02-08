@@ -2,7 +2,7 @@ import { Button, Modal } from 'antd';
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router';
 import { useSelector } from 'react-redux';
-import { OFFER_STATUS, PROPERTY_STATUS } from '../app/constants';
+import { OFFER_STATUS } from '../app/constants';
 import dummyData from '../dummy-data';
 
 function PropertyDetails() {
@@ -15,9 +15,9 @@ function PropertyDetails() {
   const [property, setProperty] = useState({});
   const offerRef = useRef();
 
-  const fetchProperty = async () => {
-    const data = dummyData.properties.find((p) => p.id === parseInt(params.id, 10));
-    setProperty(data);
+  const fetchProperty = () => {
+    // TODO: integrate with backend
+    setProperty(dummyData.properties.find((p) => p.id === parseInt(params.id, 10)));
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,7 +45,7 @@ function PropertyDetails() {
 
   useEffect(() => {
     fetchProperty();
-  }, [params.id]);
+  }, [params.id, user]);
 
   return (
     <div>
@@ -56,7 +56,7 @@ function PropertyDetails() {
         <p>{property.price}</p>
         <img className="block mx-auto w-1/4" src={property.imageSrcs} alt={property.title} />
       </div>
-      {property.propertyStatus === PROPERTY_STATUS.AVAILABLE && (
+      {user?.email && (
         <div className="flex justify-center">
           <Button onClick={showModal} type="default">
             Make Offer?
