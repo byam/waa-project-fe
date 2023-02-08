@@ -86,13 +86,19 @@ function Header() {
                   to="/admin"
                   className="text-base font-medium text-gray-500 hover:text-gray-900"
                 >
-                  Admin
+                  Admin Dashboard
                 </Link>
                 <Link
                   to="/admin/users"
                   className="text-base font-medium text-gray-500 hover:text-gray-900"
                 >
                   Users
+                </Link>
+                <Link
+                  to="/admin/requiring-approvals"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Requiring Approvals
                 </Link>
               </>
             )}

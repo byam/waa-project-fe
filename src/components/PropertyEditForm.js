@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { httpPost, httpPut } from '../api';
 import { LISTING_TYPE, PROPERTY_TYPE } from '../app/constants';
-import { notifyError } from '../helpers/notification';
+import { notifyError, notifySuccess } from '../helpers/notification';
 
 function PropertyEditForm(props) {
   const navigate = useNavigate();
@@ -31,6 +31,7 @@ function PropertyEditForm(props) {
       if (res.data) {
         console.log('Updated:', res.data);
       }
+      notifySuccess('Updated successfully');
     } catch (err) {
       notifyError('Failed to update to system');
       console.log(err);
@@ -44,7 +45,7 @@ function PropertyEditForm(props) {
         data: { ...property, ownerId: user.id },
       });
       console.log('Added:', res.data);
-      // }
+      notifySuccess('Added successfully');
     } catch (err) {
       notifyError('Failed to add to system');
       console.log(err);
