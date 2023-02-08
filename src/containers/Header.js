@@ -72,6 +72,14 @@ function Header() {
                 Add Property
               </Link>
             )}
+            {isOwner && (
+              <Link
+                to="/properties/owner"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                My Properties
+              </Link>
+            )}
             {isAdmin && (
               <>
                 <Link
@@ -106,6 +114,7 @@ function Header() {
             </div>
           ) : (
             <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
+              {user.email}({user.userId})
               <button
                 onClick={handleSignOut}
                 type="button"

@@ -54,6 +54,6 @@ export const httpGet = (props) => httpClient.request({ method: 'get', ...props }
 
 export const httpPost = (props) => httpClient.request({ method: 'post', ...props });
 
-export const httpPut = (props) => httpClient.request({ method: 'post', ...props });
+export const httpPut = (props) => httpClient.request({ method: 'put', ...props });
 
 export const httpDelete = (props) => httpClient.request({ method: 'delete', ...props });

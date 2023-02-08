@@ -9,6 +9,8 @@ import PropertyNew from '../components/PropertyNew';
 import PropertiesSaved from '../components/PropertiesSaved';
 import Test from '../components/Test';
 import Offers from '../components/Offers';
+import PropertiesOwner from '../components/PropertiesOwner';
+import PropertyEdit from '../components/PropertyEdit';
 
 export default function PageRoutes() {
   return (
@@ -16,8 +18,10 @@ export default function PageRoutes() {
       <Route path="/" element={<Navigate replace to="/properties" />} />
       <Route path="/properties" element={<Properties />} />
       <Route path="/properties/:id" element={<PropertyDetails />} />
+      <Route path="/properties/:id/edit" element={<PropertyEdit />} />
       <Route path="/properties/new" element={<PropertyNew />} />
       <Route path="/properties/saved" element={<PropertiesSaved />} />
+      <Route path="/properties/owner" element={<PropertiesOwner />} />
       <Route path="/offers" element={<Offers />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />
