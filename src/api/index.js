@@ -1,6 +1,7 @@
-import * as axios from 'axios';
+import axios from 'axios';
 import Cookies from 'universal-cookie';
 import { notifyError } from '../helpers/notification';
+import { ACCESS_TOKEN } from '../app/constants';
 
 export const API_BASE_URL = 'http://localhost:8080/api/v1';
 
@@ -12,7 +13,7 @@ const httpClient = axios.create({
 
 httpClient.interceptors.request.use(
   (config) => {
-    const token = cookies.get('access_token');
+    const token = cookies.get(ACCESS_TOKEN);
 
     if (token && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -33,7 +34,7 @@ httpClient.interceptors.response.use(
     const { status } = response ?? {};
 
     if (parseInt(status, 10) === 401) {
-      cookies.remove('access_token');
+      cookies.remove(ACCESS_TOKEN);
       notifyError('You are not authorized');
     }
 
