@@ -1,15 +1,12 @@
 import { Popover } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CurrentUser } from '../context/CurrentUser';
 import { signOut } from '../store/slices/auth';
 import { notifySuccess } from '../helpers/notification';
 import { USER_ROLES } from '../app/constants';
 
 function Header() {
-  const currentUser = useContext(CurrentUser);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -23,11 +20,6 @@ function Header() {
   const isAdmin = USER_ROLES.ADMIN === user.role;
   const isOwner = USER_ROLES.OWNER === user.role;
   const isCustomer = USER_ROLES.CUSTOMER === user.role;
-
-  // TODO: Restrict Header links by ROlE
-  console.log('isAdmin', isAdmin);
-  console.log('isOwner', isOwner);
-  console.log('isCustomer', isCustomer);
 
   return (
     <Popover className="relative bg-white">
@@ -56,7 +48,7 @@ function Header() {
             >
               Properties
             </Link>
-            {currentUser?.role === 'customer' && (
+            {isCustomer && (
               <Link
                 to="/properties/saved"
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
@@ -64,7 +56,15 @@ function Header() {
                 Saved Properties
               </Link>
             )}
-            {currentUser?.role === 'owner' && (
+            {isCustomer && (
+              <Link
+                to="/offers"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                My Offers
+              </Link>
+            )}
+            {isOwner && (
               <Link
                 to="/properties/new"
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
@@ -72,7 +72,7 @@ function Header() {
                 Add Property
               </Link>
             )}
-            {currentUser?.role === 'admin' && (
+            {isAdmin && (
               <>
                 <Link
                   to="/admin"

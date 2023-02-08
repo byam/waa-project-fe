@@ -1,27 +1,33 @@
 /* eslint-disable operator-linebreak */
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { HeartIcon } from '@heroicons/react/24/outline';
+import { useSelector } from 'react-redux';
 import dummyData from '../dummy-data';
-import { CurrentUser } from '../context/CurrentUser';
+import { PROPERTY_STATUS, USER_ROLES } from '../app/constants';
 
 function Properties(props) {
+  const auth = useSelector((state) => state.auth);
+  const user = auth.user || {};
+  const isCustomer = USER_ROLES.CUSTOMER === user.role;
+
   const [flag, setFlag] = useState(0);
-  const currentUser = useContext(CurrentUser);
+
+  // TODO: fetch user
+  const currentUser = dummyData.users.filter((u) => u.email === user.email)[0];
+
   const params = useParams();
   const [properties, setProperties] = useState([]);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const [propertyStatuses] = useState(
-    props?.propertyStatuses || ['available', 'pending', 'contingent']
-  );
+  const [propertyStatuses] = useState(props?.propertyStatuses || [PROPERTY_STATUS.AVAILABLE]);
 
   const fetchProperties = async () => {
     setProperties(
       dummyData.properties
         .filter((property) => property.owner === parseInt(params?.id, 10) || !params?.id)
-        .filter((property) => propertyStatuses.includes(property.status))
+        .filter((property) => propertyStatuses.includes(property.propertyStatus))
         .slice(0, props?.propertyMaxNum || 100)
     );
   };
@@ -97,7 +103,7 @@ function Properties(props) {
                 <Link key={p.id} to={`/properties/${p.id}`} className="group">
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
                     <img
-                      src={p.imageSrc}
+                      src={p.imageSrcs[0]}
                       alt={p.description}
                       className="h-full w-full object-cover object-center group-hover:opacity-75"
                     />
@@ -105,7 +111,7 @@ function Properties(props) {
                   <h3 className="mt-4 text-sm text-gray-700">{p.title}</h3>
                   <p className="mt-1 text-lg font-medium text-gray-900">${p.price}</p>
                 </Link>
-                {currentUser?.role === 'customer' &&
+                {isCustomer &&
                   (currentUser.favorites.includes(p.id) ? (
                     <HeartIcon
                       className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"

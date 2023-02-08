@@ -16,7 +16,7 @@ function PropertyNew() {
     city: '',
     state: '',
     zip: '',
-    imageSrc: '',
+    imageSrcs: [],
   });
 
   const handleChange = (event) => {
