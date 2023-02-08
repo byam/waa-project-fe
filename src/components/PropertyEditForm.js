@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { httpPut } from '../api';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { httpPost, httpPut } from '../api';
 import { LISTING_TYPE, PROPERTY_TYPE } from '../app/constants';
 import { notifyError } from '../helpers/notification';
 
 function PropertyEditForm(props) {
   const navigate = useNavigate();
   const [property, setProperty] = useState({});
+  const location = useLocation();
+  const isAdd = location.pathname === '/properties/new';
+
+  const auth = useSelector((state) => state.auth);
+  const user = auth.user || {};
 
   const handleChange = (event) => {
     setProperty({
@@ -18,7 +25,7 @@ function PropertyEditForm(props) {
   const handleUpdateProperty = async () => {
     try {
       const res = await httpPut({
-        url: `/properties/${property.id}`,
+        url: `/properties/${props.property.id}`,
         data: property,
       });
       if (res.data) {
@@ -32,13 +39,12 @@ function PropertyEditForm(props) {
 
   const handleAddProperty = async () => {
     try {
-      const res = await httpPut({
+      const res = await httpPost({
         url: '/properties',
-        data: property,
+        data: { ...property, ownerId: user.id },
       });
-      if (res.data) {
-        console.log('Added:', res.data);
-      }
+      console.log('Added:', res.data);
+      // }
     } catch (err) {
       notifyError('Failed to add to system');
       console.log(err);
@@ -48,25 +54,23 @@ function PropertyEditForm(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Add your submit logic here
-    console.log(property);
+    console.log('handleSubmit ', property);
 
-    if (props.property) {
-      handleUpdateProperty();
+    if (isAdd) {
+      await handleAddProperty();
     } else {
-      handleAddProperty();
+      await handleUpdateProperty();
     }
-
     navigate('/properties/owner');
   };
 
   const fetchProperty = async () => {
-    setProperty(props.property);
+    setProperty({ ...props.property });
   };
 
   useEffect(() => {
     fetchProperty();
-  }, [props.property]);
+  }, [location.pathname]);
 
   return (
     <div className="flex items-center justify-center ">

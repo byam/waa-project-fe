@@ -114,6 +114,7 @@ function Header() {
             </div>
           ) : (
             <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
+              {user.email}({user.userId})
               <button
                 onClick={handleSignOut}
                 type="button"
