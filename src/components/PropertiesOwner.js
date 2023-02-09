@@ -22,6 +22,7 @@ function PropertiesOwner() {
 
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [isModalCancelContingentOpen, setIsModalCancelContingentOpen] = useState(false);
+  const [isModalVerifyOpen, setIsModalVerifyOpen] = useState(false);
 
   const showModalDelete = () => {
     setIsModalDeleteOpen(true);
@@ -34,6 +35,12 @@ function PropertiesOwner() {
   };
   const handleCancelContingentCancel = () => {
     setIsModalCancelContingentOpen(false);
+  };
+  const showModalVerify = () => {
+    setIsModalVerifyOpen(true);
+  };
+  const handleVerifyCancel = () => {
+    setIsModalVerifyOpen(false);
   };
 
   const handleDelete = (propertyId) => async () => {
@@ -71,6 +78,23 @@ function PropertiesOwner() {
       console.log(err);
     }
   };
+  const handleVerify = (pId) => async () => {
+    console.log('handleVerify:', pId);
+    try {
+      const res = await httpPut({
+        url: `properties/${pId}/contingent`,
+      });
+      if (res.data) {
+        console.log('Updated Verify:', res.data);
+        notifySuccess('Updated Pending to Contingent successfully');
+        setIsModalVerifyOpen(false);
+        setFlag(flag + 1);
+      }
+    } catch (err) {
+      notifyError('Failed to Updated Pending to Contingent');
+      console.log(err);
+    }
+  };
 
   const fetchProperties = async () => {
     if (isOwner) {
@@ -104,25 +128,25 @@ function PropertiesOwner() {
             {properties.map((p) => (
               <div key={p.id}>
                 <Property key={p.id} p={p} />
-                <Button onClick={() => handleEdit(p.id)} type="default">
-                  Edit
-                </Button>{' '}
-                {p.propertyStatus !== PROPERTY_STATUS.PENDING &&
-                  p.propertyStatus !== PROPERTY_STATUS.CONTINGENT && (
-                    <div>
-                      <Button onClick={showModalDelete} type="default">
-                        Delete
-                        <Modal
-                          title={`Deleting this "${p.title}" ?`}
-                          open={isModalDeleteOpen}
-                          onOk={handleDelete(p.id)}
-                          onCancel={handleDeleteCancel}
-                          okType="danger"
-                          okText="Delete"
-                        />
-                      </Button>{' '}
-                    </div>
-                  )}
+                {(p.propertyStatus === PROPERTY_STATUS.AVAILABLE ||
+                  p.propertyStatus === PROPERTY_STATUS.UNAVAILABLE) && (
+                  <div>
+                    <Button onClick={() => handleEdit(p.id)} type="default">
+                      Edit
+                    </Button>
+                    <Button onClick={showModalDelete} type="default">
+                      Delete
+                      <Modal
+                        title={`Deleting this "${p.title}" ?`}
+                        open={isModalDeleteOpen}
+                        onOk={handleDelete(p.id)}
+                        onCancel={handleDeleteCancel}
+                        okType="danger"
+                        okText="Delete"
+                      />
+                    </Button>{' '}
+                  </div>
+                )}
                 {p.propertyStatus === PROPERTY_STATUS.CONTINGENT && (
                   <div>
                     <Button onClick={showModalCancelContingent} type="default">
@@ -134,6 +158,21 @@ function PropertiesOwner() {
                         onCancel={handleCancelContingentCancel}
                         okType="danger"
                         okText="Cancel Contingent"
+                      />
+                    </Button>{' '}
+                  </div>
+                )}
+                {p.propertyStatus === PROPERTY_STATUS.PENDING && (
+                  <div>
+                    <Button onClick={showModalVerify} type="default">
+                      Verify
+                      <Modal
+                        title={`Verify this "${p.title}" to contingent?`}
+                        open={isModalVerifyOpen}
+                        onOk={handleVerify(p.id)}
+                        onCancel={handleVerifyCancel}
+                        okType="danger"
+                        okText="Verify"
                       />
                     </Button>{' '}
                   </div>
