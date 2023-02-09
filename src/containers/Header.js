@@ -56,12 +56,14 @@ function Header() {
             </Popover.Button>
           </div>
           <Popover.Group as="nav" className="hidden space-x-10 md:flex">
-            <Link
-              to="/properties"
-              className="text-base font-medium text-gray-500 hover:text-gray-900"
-            >
-              Properties
-            </Link>
+            {!isOwner && !isAdmin && (
+              <Link
+                to="/properties"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                Properties
+              </Link>
+            )}
             {isCustomer && (
               <Link
                 to="/properties/saved"
