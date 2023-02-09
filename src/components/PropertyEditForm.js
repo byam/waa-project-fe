@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -8,26 +8,20 @@ import { notifyError, notifySuccess } from '../helpers/notification';
 
 function PropertyEditForm(props) {
   const navigate = useNavigate();
-  const [property, setProperty] = useState({});
   const location = useLocation();
   const isAdd = location.pathname === '/properties/new';
+
+  const formRef = useRef({});
 
   const auth = useSelector((state) => state.auth);
   const user = auth.user || {};
 
-  const handleChange = (event) => {
-    setProperty({
-      ...property,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const handleUpdateProperty = async () => {
-    console.log('handleUpdateProperty ', property);
+  const handleUpdateProperty = async (data) => {
+    console.log('handleUpdateProperty ', data);
     try {
       const res = await httpPut({
         url: `/properties/${props.property.id}`,
-        data: property,
+        data,
       });
       if (res.data) {
         console.log('Updated:', res.data);
@@ -39,11 +33,11 @@ function PropertyEditForm(props) {
     }
   };
 
-  const handleAddProperty = async () => {
+  const handleAddProperty = async (data) => {
     try {
       const res = await httpPost({
         url: '/properties',
-        data: { ...property, ownerId: user.id },
+        data: { ...data, ownerId: user.id },
       });
       console.log('Added:', res.data);
       notifySuccess('Added successfully');
@@ -53,32 +47,60 @@ function PropertyEditForm(props) {
     }
   };
 
+  const setFormData = () => {
+    const form = formRef.current;
+    const title = form?.title?.value;
+    const description = form?.description?.value;
+    const address = form?.address?.value;
+    const city = form?.city?.value;
+    const state = form?.state?.value;
+    const zipCode = form?.zipCode?.value;
+    const price = form?.price?.value;
+    const listingType = form?.listingType?.value;
+    const propertyType = form?.propertyType?.value;
+    const image = form?.image?.value;
+    const formData = {
+      title,
+      description,
+      address,
+      city,
+      state,
+      zipCode,
+      price,
+      listingType,
+      propertyType,
+      image,
+    };
+    return formData;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log('handleSubmit ', property);
+    const formData = setFormData();
 
     if (isAdd) {
-      await handleAddProperty();
+      await handleAddProperty(formData);
     } else {
-      await handleUpdateProperty();
+      await handleUpdateProperty(formData);
     }
     navigate('/properties/owner');
   };
 
-  const fetchProperty = async () => {
-    setProperty({ ...props.property });
-  };
-
   useEffect(() => {
-    fetchProperty();
-  }, [location.pathname]);
+    if (props?.property?.listingType) {
+      formRef.current.listingType.value = props?.property?.listingType;
+    }
+    if (props?.property?.propertyType) {
+      formRef.current.propertyType.value = props?.property?.propertyType;
+    }
+  }, [props]);
 
   return (
     <div className="flex items-center justify-center ">
       <div className="md:grid md:grid-cols-3 md:gap-6">
         <div className="mt-5 md:col-span-2 md:mt-0">
-          <form onSubmit={handleSubmit}>
+          <form ref={formRef} onSubmit={handleSubmit}>
             <div className="overflow-hidden shadow sm:rounded-md">
               <div className="bg-white px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-6 gap-6">
@@ -88,10 +110,8 @@ function PropertyEditForm(props) {
                       required
                       id="listingType"
                       name="listingType"
-                      defaultValue={props.property?.listingType || ''}
                       autoComplete="listingType"
                       className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      onChange={handleChange}
                     >
                       <option value="">Select a type</option>
                       <option value={LISTING_TYPE.SALE}>SALE</option>
@@ -105,10 +125,8 @@ function PropertyEditForm(props) {
                       required
                       id="propertyType"
                       name="propertyType"
-                      defaultValue={props.property?.propertyType || ''}
                       autoComplete="propertyType"
                       className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                      onChange={handleChange}
                     >
                       <option value="">Select a type</option>
                       <option value={PROPERTY_TYPE.HOUSE}>HOUSE</option>
@@ -127,7 +145,6 @@ function PropertyEditForm(props) {
                       autoComplete="title"
                       required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      onChange={handleChange}
                     />
                   </div>
 
@@ -141,7 +158,6 @@ function PropertyEditForm(props) {
                       autoComplete="description"
                       required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      onChange={handleChange}
                     />
                   </div>
 
@@ -154,7 +170,6 @@ function PropertyEditForm(props) {
                       defaultValue={props.property?.image || ''}
                       required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      onChange={handleChange}
                     />
                   </div>
 
@@ -168,7 +183,6 @@ function PropertyEditForm(props) {
                       defaultValue={props.property?.price || ''}
                       autoComplete="price"
                       required
-                      onChange={handleChange}
                     />
                   </div>
 
@@ -182,7 +196,6 @@ function PropertyEditForm(props) {
                       autoComplete="address-level3"
                       required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      onChange={handleChange}
                     />
                   </div>
 
@@ -193,7 +206,6 @@ function PropertyEditForm(props) {
                       name="city"
                       id="city"
                       defaultValue={props.property?.city || ''}
-                      onChange={handleChange}
                       required
                       autoComplete="address-level2"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -207,7 +219,6 @@ function PropertyEditForm(props) {
                       name="state"
                       id="state"
                       defaultValue={props.property?.state || ''}
-                      onChange={handleChange}
                       required
                       autoComplete="address-level1"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -221,7 +232,6 @@ function PropertyEditForm(props) {
                       name="zipCode"
                       id="zipCode"
                       defaultValue={props.property?.zipCode || ''}
-                      onChange={handleChange}
                       required
                       autoComplete="postal-code"
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"

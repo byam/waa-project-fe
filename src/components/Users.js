@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Space, Table } from 'antd';
-import dummyData from '../dummy-data';
+import { httpGet } from '../api';
 
-function Users(props) {
+function Users() {
   const [users, setUsers] = useState([]);
-  const [userRoles] = useState(props?.userRoles || ['owner', 'customer']);
 
   const fetchCustomers = async () => {
-    setUsers(
-      dummyData.users
-        .filter((user) => userRoles.includes(user.role))
-        .map((user) => ({ ...user, key: user.id }))
-        .slice(0, props?.usersMaxNum || 100)
-    );
+    const res = await httpGet({
+      url: '/users',
+    });
+    setUsers(res.data || []);
   };
 
   const columns = [
@@ -21,16 +18,6 @@ function Users(props) {
       title: '#',
       dataIndex: 'id',
       key: 'id',
-    },
-    {
-      title: 'First Name',
-      dataIndex: 'firstName',
-      key: 'firstName',
-    },
-    {
-      title: 'Last Name',
-      dataIndex: 'lastName',
-      key: 'lastName',
     },
     {
       title: 'Type',
@@ -43,18 +30,9 @@ function Users(props) {
       key: 'role',
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Link to="/properties">Activate {record.name}</Link>
-          <Link to="/properties">Deactivate {record.name}</Link>
-          <Link to="/properties">Reset Password {record.name}</Link>
-          {record.role === 'owner' && (
-            <Link to={`/admin/users/${record.id}/properties`}>Properties {record.name}</Link>
-          )}
-        </Space>
-      ),
+      title: 'Properties Size (If Owner)',
+      dataIndex: 'action',
+      render: (_, record) => <p> {record.properties.length} </p>,
     },
   ];
 
