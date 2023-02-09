@@ -70,7 +70,7 @@ function Header() {
                 Saved Properties
               </Link>
             )}
-            {isCustomer && (
+            {(isCustomer || isOwner) && (
               <Link
                 to="/inquiries"
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
