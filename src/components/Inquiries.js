@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
-import { httpGet, httpPut } from '../api';
+import { httpGet } from '../api';
 
 function Offers() {
   // const auth = useSelector((state) => state.auth);
@@ -14,18 +14,6 @@ function Offers() {
       url: '/offers',
     });
     setOffers(res.data || []);
-  };
-
-  const handleOfferCancel = async (id) => {
-    const offer = offers.find((of) => of.id === id);
-    httpPut({
-      url: `/offers/${offer.id}`,
-      data: {
-        status: 'CANCELLED',
-      },
-    }).then(() => {
-      fetchOffers();
-    });
   };
 
   const columns = [
@@ -48,26 +36,6 @@ function Offers() {
       title: 'Offer Price $',
       dataIndex: 'price',
       key: 'price',
-    },
-    {
-      title: 'Action',
-      dataIndex: 'offerStatus',
-      key: 'offerStatus',
-      render: (text, offer) => {
-        if (text === 'PENDING') {
-          return (
-            <button
-              onClick={() => handleOfferCancel(offer.id)}
-              className="bg-red-500 text-white px-2"
-              type="button"
-            >
-              Cancel
-            </button>
-          );
-        }
-
-        return null;
-      },
     },
   ];
 

@@ -12,6 +12,7 @@ import Offers from '../components/Offers';
 import PropertiesOwner from '../components/PropertiesOwner';
 import PropertyEdit from '../components/PropertyEdit';
 import RequiringApprovals from '../components/RequiringApprovals';
+import Inquiries from '../components/Inquiries';
 
 export default function PageRoutes() {
   return (
@@ -24,6 +25,7 @@ export default function PageRoutes() {
       <Route path="/properties/saved" element={<PropertiesSaved />} />
       <Route path="/properties/owner" element={<PropertiesOwner />} />
       <Route path="/offers" element={<Offers />} />
+      <Route path="/inquiries" element={<Inquiries />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<Users />} />
       <Route path="/admin/users/:id/properties" element={<Properties />} />

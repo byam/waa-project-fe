@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router';
 import { useSelector } from 'react-redux';
 import { httpGet, httpPost } from '../api';
-import { notifySuccess } from '../helpers/notification';
+import { notifyError, notifySuccess } from '../helpers/notification';
 import { USER_ROLES } from '../app/constants';
 
 function PropertyDetails() {
@@ -31,11 +31,15 @@ function PropertyDetails() {
     setIsModalOpen(true);
   };
   const handleOk = async () => {
-    await httpPost({
+    const res = await httpPost({
       url: `/properties/${params.id}/offer`,
       data: formData,
     });
-    notifySuccess('Offer sent!');
+    if (res.data.status === 'CREATED') {
+      notifySuccess('Offer sent!');
+    } else {
+      notifyError(res.data.message);
+    }
     setIsModalOpen(false);
   };
   const handleCancel = () => {
