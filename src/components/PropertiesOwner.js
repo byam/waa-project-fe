@@ -48,7 +48,7 @@ function PropertiesOwner() {
     if (isOwner) {
       try {
         const res = await httpGet({
-          url: `/properties?ownerId=${user.id}`,
+          url: `/properties?owner_id=${user.userId}`,
         });
         if (res.data) setProperties(res.data);
       } catch (err) {

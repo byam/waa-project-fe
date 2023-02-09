@@ -36,8 +36,10 @@ function Property({ p }) {
   };
 
   const renderHeart = () => {
+    if (!isCustomer) return null;
+
     const isLiked = likedProperties.findIndex((lp) => lp.id === p.id) > -1;
-    return isCustomer && isLiked ? (
+    return isLiked ? (
       <HeartIcon
         className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"
         onClick={() => heartClick('dislike')}

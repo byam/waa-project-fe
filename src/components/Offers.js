@@ -1,11 +1,17 @@
 /* eslint-disable new-cap */
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
+import { useSelector } from 'react-redux';
 import jsPDF from 'jspdf';
 import { httpGet, httpPut } from '../api';
-import { OFFER_STATUS } from '../app/constants';
+import { OFFER_STATUS, USER_ROLES } from '../app/constants';
+import { notifySuccess } from '../helpers/notification';
 
 function Offers() {
+  const auth = useSelector((state) => state.auth);
+  const user = auth.user || {};
+  const isOwner = USER_ROLES.OWNER === user.role;
+
   const [offers, setOffers] = useState([]);
   const [flag] = useState(0);
 
@@ -42,11 +48,30 @@ function Offers() {
     doc.save('receipt.pdf');
   };
 
+  const handleOfferOwner = async (id, type) => {
+    const status = type === 'accept' ? 'APPROVED' : 'CANCELLED';
+    const offer = offers.find((of) => of.id === id);
+    httpPut({
+      url: `/offers/${offer.id}`,
+      data: {
+        status,
+      },
+    }).then((r) => {
+      notifySuccess(r.data.message);
+      fetchOffers();
+    });
+  };
+
   const columns = [
     {
       title: 'Offer ID',
       dataIndex: 'id',
       key: 'id',
+    },
+    {
+      title: 'Property ID',
+      dataIndex: 'propertyId',
+      key: 'propertyId',
     },
     {
       title: 'Message',
@@ -68,6 +93,40 @@ function Offers() {
       dataIndex: 'offerStatus',
       key: 'offerStatus',
       render: (text, offer) => {
+        console.log(text);
+        if (text === OFFER_STATUS.APPROVED) {
+          return (
+            <button
+              onClick={() => handleContractDownload(offer.id)}
+              className="bg-red-500 text-white px-2"
+              type="button"
+            >
+              Download Receipt
+            </button>
+          );
+        }
+
+        if (isOwner) {
+          return (
+            <>
+              <button
+                onClick={() => handleOfferOwner(offer.id, 'accept')}
+                className="bg-blue-500 text-white px-2 mr-4"
+                type="button"
+              >
+                Accept
+              </button>
+              <button
+                onClick={() => handleOfferOwner(offer.id, 'reject')}
+                className="bg-red-500 text-white px-2"
+                type="button"
+              >
+                Reject
+              </button>
+            </>
+          );
+        }
+
         if (text === OFFER_STATUS.PENDING) {
           return (
             <button
@@ -76,18 +135,6 @@ function Offers() {
               type="button"
             >
               Cancel
-            </button>
-          );
-        }
-
-        if (text === OFFER_STATUS.ACCEPTED) {
-          return (
-            <button
-              onClick={() => handleContractDownload(offer.id)}
-              className="bg-red-500 text-white px-2"
-              type="button"
-            >
-              Download Receipt
             </button>
           );
         }

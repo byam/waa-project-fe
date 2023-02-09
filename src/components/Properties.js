@@ -1,7 +1,6 @@
 /* eslint-disable operator-linebreak */
 import { useEffect, useState } from 'react';
 import { httpGet } from '../api';
-import { PROPERTY_STATUS } from '../app/constants';
 import Property from './Property';
 
 function Properties() {
@@ -16,7 +15,7 @@ function Properties() {
 
   const fetchProperties = async (params = {}) => {
     const res = await httpGet({
-      url: `/properties?property_status=${PROPERTY_STATUS.AVAILABLE}`,
+      url: '/properties',
       params,
     });
     setProperties(res.data);
