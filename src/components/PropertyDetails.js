@@ -12,11 +12,15 @@ function PropertyDetails() {
 
   const params = useParams();
   const [property, setProperty] = useState({});
-  const [formData, setFormData] = useState({
+  const [formOfferData, setFormOfferData] = useState({
     price: '',
     message: '',
   });
+  const [formInquiryData, setFormInquiryData] = useState({
+    message: '',
+  });
   const offerRef = useRef();
+  const inquiryRef = useRef();
   const isCustomer = USER_ROLES.CUSTOMER === user.role;
 
   const fetchProperty = async () => {
@@ -26,29 +30,55 @@ function PropertyDetails() {
     setProperty(res.data);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
+  const [isOfferOpen, setIsOfferOpen] = useState(false);
+  const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const showOffer = () => {
+    setIsOfferOpen(true);
   };
-  const handleOk = async () => {
+  const showInquiry = () => {
+    setIsInquiryOpen(true);
+  };
+  const handleOffer = async () => {
     const res = await httpPost({
       url: `/properties/${params.id}/offer`,
-      data: formData,
+      data: formOfferData,
     });
     if (res.data.status === 'CREATED') {
       notifySuccess('Offer sent!');
     } else {
       notifyError(res.data.message);
     }
-    setIsModalOpen(false);
+    setIsOfferOpen(false);
   };
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleCancelOffer = () => {
+    setIsOfferOpen(false);
+  };
+  const handleInquiry = async () => {
+    const res = await httpPost({
+      url: `/properties/${params.id}/inquiry`,
+      data: formInquiryData,
+    });
+    if (res.data.status === 'CREATED') {
+      notifySuccess('Inquiry sent!');
+    } else {
+      notifyError(res.data.message);
+    }
+    setIsInquiryOpen(false);
+  };
+  const handleCancelInquiry = () => {
+    setIsInquiryOpen(false);
   };
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
+  const handleInputOfferChange = (e) => {
+    setFormOfferData({
+      ...formOfferData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleInputInquiryChange = (e) => {
+    setFormInquiryData({
+      ...formInquiryData,
       [e.target.name]: e.target.value,
     });
   };
@@ -75,32 +105,54 @@ function PropertyDetails() {
       </div>
       {user?.email && isCustomer && (
         <div className="flex justify-center">
-          <Button onClick={showModal} type="default">
+          <Button onClick={showOffer} type="default">
             Make Offer?
           </Button>
           <Modal
             title="Make an Offer to the Seller"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
+            open={isOfferOpen}
+            onOk={handleOffer}
+            onCancel={handleCancelOffer}
             okType="danger"
             okText="Send Offer"
           >
             <form ref={offerRef} className="flex flex-col">
               <input
                 type="text"
-                onChange={handleInputChange}
-                value={formData.message}
+                onChange={handleInputOfferChange}
+                value={formOfferData.message}
                 name="message"
                 placeholder="Message"
                 required
               />
               <input
                 type="number"
-                onChange={handleInputChange}
-                value={formData.price}
+                onChange={handleInputOfferChange}
+                value={formOfferData.price}
                 name="price"
                 placeholder="Insert Price"
+                required
+              />
+            </form>
+          </Modal>
+          <Button onClick={showInquiry} type="default">
+            Make Inquiry?
+          </Button>
+          <Modal
+            title="Make an Inquiry to the Seller"
+            open={isInquiryOpen}
+            onOk={handleInquiry}
+            onCancel={handleCancelInquiry}
+            okType="danger"
+            okText="Send Inquiry"
+          >
+            <form ref={inquiryRef} className="flex flex-col">
+              <input
+                type="text"
+                onChange={handleInputInquiryChange}
+                value={formInquiryData.message}
+                name="message"
+                placeholder="Message"
                 required
               />
             </form>

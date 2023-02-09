@@ -11,7 +11,7 @@ function Offers() {
 
   const fetchOffers = async () => {
     const res = await httpGet({
-      url: '/offers',
+      url: '/inquiries',
     });
     setOffers(res.data || []);
   };
@@ -23,19 +23,14 @@ function Offers() {
       key: 'id',
     },
     {
+      title: 'Property ID',
+      dataIndex: 'propertyId',
+      key: 'propertyId',
+    },
+    {
       title: 'Message',
       dataIndex: 'message',
       key: 'message',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'offerStatus',
-      key: 'offerStatus',
-    },
-    {
-      title: 'Offer Price $',
-      dataIndex: 'price',
-      key: 'price',
     },
   ];
 
