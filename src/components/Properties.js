@@ -1,6 +1,5 @@
 /* eslint-disable operator-linebreak */
 import { useEffect, useState } from 'react';
-import { HeartIcon } from '@heroicons/react/24/outline';
 import { httpGet } from '../api';
 import { PROPERTY_STATUS } from '../app/constants';
 import Property from './Property';

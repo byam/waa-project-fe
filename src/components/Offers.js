@@ -77,7 +77,7 @@ function Offers() {
 
   return (
     <div className="px-4 py-5 sm:px-6">
-      <Table columns={columns} dataSource={offers} />
+      <Table columns={columns} dataSource={offers.map((o) => ({ ...o, key: o.id }))} />
     </div>
   );
 }
