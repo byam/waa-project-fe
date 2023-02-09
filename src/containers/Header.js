@@ -2,15 +2,16 @@ import { Popover } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
-import { signOut } from '../store/slices/auth';
+import { useEffect } from 'react';
+import { signOut, updateUserDetails } from '../store/slices/auth';
 import { notifySuccess } from '../helpers/notification';
 import { USER_ROLES } from '../app/constants';
+import { httpGet } from '../api';
 
 function Header() {
   const auth = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-
   const user = auth.user || {};
+  const dispatch = useDispatch();
 
   const handleSignOut = () => {
     dispatch(signOut());
@@ -20,6 +21,16 @@ function Header() {
   const isAdmin = USER_ROLES.ADMIN === user.role;
   const isOwner = USER_ROLES.OWNER === user.role;
   const isCustomer = USER_ROLES.CUSTOMER === user.role;
+
+  useEffect(() => {
+    if (user.userId) {
+      httpGet({
+        url: `/users/${user.userId}`,
+      }).then((r) => {
+        dispatch(updateUserDetails(r.data));
+      });
+    }
+  }, []);
 
   return (
     <Popover className="relative bg-white">
@@ -54,6 +65,14 @@ function Header() {
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
               >
                 Saved Properties
+              </Link>
+            )}
+            {isCustomer && (
+              <Link
+                to="/inquiries"
+                className="text-base font-medium text-gray-500 hover:text-gray-900"
+              >
+                Inquiries
               </Link>
             )}
             {isCustomer && (

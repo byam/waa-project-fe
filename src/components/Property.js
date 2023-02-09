@@ -1,12 +1,61 @@
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { HeartIcon } from '@heroicons/react/24/outline';
+import { USER_ROLES } from '../app/constants';
+import { httpDelete, httpPost } from '../api';
+import { updateUserDetails } from '../store/slices/auth';
 
 function Property({ p }) {
+  const auth = useSelector((state) => state.auth);
+  const user = auth.user || {};
+  const isCustomer = USER_ROLES.CUSTOMER === user.role;
+  const likedProperties = user.details?.properties || [];
+  // const location = useLocation();
+  const dispatch = useDispatch();
+
+  const heartClick = async (type) => {
+    if (type === 'like') {
+      await httpPost({
+        url: `/properties/${p.id}/favourite`,
+      });
+      dispatch(
+        updateUserDetails({
+          properties: [...likedProperties, p],
+        })
+      );
+    } else {
+      await httpDelete({
+        url: `/properties/${p.id}/favourite`,
+      });
+      dispatch(
+        updateUserDetails({
+          properties: likedProperties.filter((lp) => lp.id !== p.id),
+        })
+      );
+    }
+  };
+
+  const renderHeart = () => {
+    const isLiked = likedProperties.findIndex((lp) => lp.id === p.id) > -1;
+    return isCustomer && isLiked ? (
+      <HeartIcon
+        className="h-6 w-6 text-red-500 hover:text-grey-500 cursor-pointer"
+        onClick={() => heartClick('dislike')}
+      />
+    ) : (
+      <HeartIcon
+        className="h-6 w-6 text-gray-500 hover:text-red-500 cursor-pointer"
+        onClick={() => heartClick('like')}
+      />
+    );
+  };
+
   return (
     <div className="relative">
-      <div className="absolute z-10 right-0 w-fit text-center px-2 py-1 bg-red-600 text-white">
+      <div className="absolute z-10 right-0 w-fit text-center px-2 py-1 bg-indigo-500 text-white">
         {p.propertyStatus}
       </div>
-      <div className="absolute z-10 w-fit right-0 text-center bg-red-600 text-white px-2 py-1 top-8">
+      <div className="absolute z-10 w-fit right-0 text-center bg-indigo-500 text-white px-2 py-1 top-8">
         {p.listingType}
       </div>
       <Link key={p.id} to={`/properties/${p.id}`} className="group">
@@ -24,6 +73,7 @@ function Property({ p }) {
         </h3>
         <p className="mt-1 text-lg font-medium text-gray-900">${p.price}</p>
       </Link>
+      {renderHeart()}
     </div>
   );
 }
