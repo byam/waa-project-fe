@@ -64,24 +64,29 @@ function Offers() {
 
   const columns = [
     {
-      title: 'Offer ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
       title: 'Property ID',
       dataIndex: 'propertyId',
       key: 'propertyId',
     },
     {
-      title: 'Message',
-      dataIndex: 'message',
-      key: 'message',
+      title: 'Property Status',
+      dataIndex: 'propertyStatus',
+      key: 'propertyStatus',
     },
     {
-      title: 'Status',
+      title: 'Offer ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Offer Status',
       dataIndex: 'offerStatus',
       key: 'offerStatus',
+    },
+    {
+      title: 'Offer Message',
+      dataIndex: 'message',
+      key: 'message',
     },
     {
       title: 'Offer Price $',
@@ -89,7 +94,7 @@ function Offers() {
       key: 'price',
     },
     {
-      title: 'Action',
+      title: 'Offer Action',
       dataIndex: 'offerStatus',
       key: 'offerStatus',
       render: (text, offer) => {

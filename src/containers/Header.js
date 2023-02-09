@@ -107,12 +107,6 @@ function Header() {
             {isAdmin && (
               <>
                 <Link
-                  to="/admin"
-                  className="text-base font-medium text-gray-500 hover:text-gray-900"
-                >
-                  Admin Dashboard
-                </Link>
-                <Link
                   to="/admin/users"
                   className="text-base font-medium text-gray-500 hover:text-gray-900"
                 >
