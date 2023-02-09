@@ -1,10 +1,22 @@
 /* eslint-disable operator-linebreak */
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { httpGet } from '../api';
-import { PROPERTY_STATUS } from '../app/constants';
+import { PROPERTY_STATUS, USER_ROLES } from '../app/constants';
 import Property from './Property';
 
 function Properties() {
+  const auth = useSelector((state) => state.auth);
+  const user = auth.user || {};
+  const isOwner = USER_ROLES.OWNER === user.role;
+  const isAdmin = USER_ROLES.ADMIN === user.role;
+
+  const navigate = useNavigate();
+
+  if (isAdmin) navigate('/admin/users');
+  if (isOwner) navigate('/properties/owner');
+
   const [formData, setFormData] = useState({
     listing_type: '',
     property_type: '',

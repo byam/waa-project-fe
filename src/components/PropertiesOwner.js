@@ -136,45 +136,45 @@ function PropertiesOwner() {
                     </Button>
                     <Button onClick={showModalDelete} type="default">
                       Delete
-                      <Modal
-                        title={`Deleting this "${p.title}" ?`}
-                        open={isModalDeleteOpen}
-                        onOk={handleDelete(p.id)}
-                        onCancel={handleDeleteCancel}
-                        okType="danger"
-                        okText="Delete"
-                      />
                     </Button>{' '}
+                    <Modal
+                      title={`Deleting this "${p.title}" ?`}
+                      open={isModalDeleteOpen}
+                      onOk={handleDelete(p.id)}
+                      onCancel={handleDeleteCancel}
+                      okType="danger"
+                      okText="Delete"
+                    />
                   </div>
                 )}
                 {p.propertyStatus === PROPERTY_STATUS.CONTINGENT && (
                   <div>
                     <Button onClick={showModalCancelContingent} type="default">
                       Cancel Contingent
-                      <Modal
-                        title={`Cancelling this contingent "${p.title}" ?`}
-                        open={isModalCancelContingentOpen}
-                        onOk={handleCancelContingent(p.id)}
-                        onCancel={handleCancelContingentCancel}
-                        okType="danger"
-                        okText="Cancel Contingent"
-                      />
                     </Button>{' '}
+                    <Modal
+                      title={`Cancelling this contingent "${p.title}" ?`}
+                      open={isModalCancelContingentOpen}
+                      onOk={handleCancelContingent(p.id)}
+                      onCancel={handleCancelContingentCancel}
+                      okType="danger"
+                      okText="Cancel Contingent"
+                    />
                   </div>
                 )}
                 {p.propertyStatus === PROPERTY_STATUS.PENDING && (
                   <div>
                     <Button onClick={showModalVerify} type="default">
                       Verify
-                      <Modal
-                        title={`Verify this "${p.title}" to contingent?`}
-                        open={isModalVerifyOpen}
-                        onOk={handleVerify(p.id)}
-                        onCancel={handleVerifyCancel}
-                        okType="danger"
-                        okText="Verify"
-                      />
                     </Button>{' '}
+                    <Modal
+                      title={`Verify this "${p.title}" to contingent?`}
+                      open={isModalVerifyOpen}
+                      onOk={handleVerify(p.id)}
+                      onCancel={handleVerifyCancel}
+                      okType="danger"
+                      okText="Verify"
+                    />
                   </div>
                 )}
               </div>
