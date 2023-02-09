@@ -18,7 +18,7 @@ function Offers() {
 
   const columns = [
     {
-      title: 'Offer ID',
+      title: 'Inquiry ID',
       dataIndex: 'id',
       key: 'id',
     },
