@@ -1,9 +1,11 @@
+/* eslint-disable indent */
+/* eslint-disable operator-linebreak */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button, Modal } from 'antd';
 import { PROPERTY_STATUS, USER_ROLES } from '../app/constants';
-import { httpDelete, httpGet } from '../api';
+import { httpDelete, httpGet, httpPut } from '../api';
 import { notifyError, notifySuccess } from '../helpers/notification';
 import Property from './Property';
 
@@ -18,12 +20,20 @@ function PropertiesOwner() {
 
   const [flag, setFlag] = useState(0);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+  const [isModalCancelContingentOpen, setIsModalCancelContingentOpen] = useState(false);
+
+  const showModalDelete = () => {
+    setIsModalDeleteOpen(true);
   };
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleDeleteCancel = () => {
+    setIsModalDeleteOpen(false);
+  };
+  const showModalCancelContingent = () => {
+    setIsModalCancelContingentOpen(true);
+  };
+  const handleCancelContingentCancel = () => {
+    setIsModalCancelContingentOpen(false);
   };
 
   const handleDelete = (propertyId) => async () => {
@@ -35,11 +45,29 @@ function PropertiesOwner() {
       if (res.data) {
         console.log('Deleted:', res.data);
         notifySuccess('Deleted successfully');
-        setIsModalOpen(false);
+        setIsModalDeleteOpen(false);
         setFlag(flag + 1);
       }
     } catch (err) {
       notifyError('Failed to delete');
+      console.log(err);
+    }
+  };
+
+  const handleCancelContingent = (pId) => async () => {
+    console.log('handleCancelContingent:', pId);
+    try {
+      const res = await httpPut({
+        url: `properties/${pId}/cancel-contingent`,
+      });
+      if (res.data) {
+        console.log('Updated:', res.data);
+        notifySuccess('Updated Contingent to Available successfully');
+        setIsModalCancelContingentOpen(false);
+        setFlag(flag + 1);
+      }
+    } catch (err) {
+      notifyError('Failed to Updated Contingent to Available');
       console.log(err);
     }
   };
@@ -79,20 +107,35 @@ function PropertiesOwner() {
                 <Button onClick={() => handleEdit(p.id)} type="default">
                   Edit
                 </Button>{' '}
-                {p.propertyStatus !== PROPERTY_STATUS.PENDING && (
+                {p.propertyStatus !== PROPERTY_STATUS.PENDING &&
+                  p.propertyStatus !== PROPERTY_STATUS.CONTINGENT && (
+                    <div>
+                      <Button onClick={showModalDelete} type="default">
+                        Delete
+                        <Modal
+                          title={`Deleting this "${p.title}" ?`}
+                          open={isModalDeleteOpen}
+                          onOk={handleDelete(p.id)}
+                          onCancel={handleDeleteCancel}
+                          okType="danger"
+                          okText="Delete"
+                        />
+                      </Button>{' '}
+                    </div>
+                  )}
+                {p.propertyStatus === PROPERTY_STATUS.CONTINGENT && (
                   <div>
-                    <Button onClick={showModal} type="default">
-                      Delete
-                    </Button>
-
-                    <Modal
-                      title={`Deleting this "${p.title}" ?`}
-                      open={isModalOpen}
-                      onOk={handleDelete(p.id)}
-                      onCancel={handleCancel}
-                      okType="danger"
-                      okText="Delete"
-                    />
+                    <Button onClick={showModalCancelContingent} type="default">
+                      Cancel Contingent
+                      <Modal
+                        title={`Cancelling this contingent "${p.title}" ?`}
+                        open={isModalCancelContingentOpen}
+                        onOk={handleCancelContingent(p.id)}
+                        onCancel={handleCancelContingentCancel}
+                        okType="danger"
+                        okText="Cancel Contingent"
+                      />
+                    </Button>{' '}
                   </div>
                 )}
               </div>
