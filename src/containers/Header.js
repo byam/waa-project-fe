@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import { signOut, updateUserDetails } from '../store/slices/auth';
 import { notifySuccess } from '../helpers/notification';
 import { USER_ROLES } from '../app/constants';
@@ -12,10 +13,12 @@ function Header() {
   const auth = useSelector((state) => state.auth);
   const user = auth.user || {};
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     dispatch(signOut());
     notifySuccess('Successfully signed out');
+    navigate('/');
   };
 
   const isAdmin = USER_ROLES.ADMIN === user.role;
@@ -75,7 +78,7 @@ function Header() {
                 Inquiries
               </Link>
             )}
-            {isCustomer && (
+            {(isCustomer || isOwner) && (
               <Link
                 to="/offers"
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
