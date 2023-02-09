@@ -1,11 +1,11 @@
+/* eslint-disable new-cap */
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
+import jsPDF from 'jspdf';
 import { httpGet, httpPut } from '../api';
+import { OFFER_STATUS } from '../app/constants';
 
 function Offers() {
-  // const auth = useSelector((state) => state.auth);
-  // const user = auth.user || {};
-
   const [offers, setOffers] = useState([]);
   const [flag] = useState(0);
 
@@ -26,6 +26,20 @@ function Offers() {
     }).then(() => {
       fetchOffers();
     });
+  };
+
+  const handleContractDownload = async (offerId) => {
+    const offer = offers.find((of) => of.id === offerId);
+    console.log('handleContractDownload:', offer);
+    const doc = new jsPDF();
+
+    let i = 0;
+    Object.entries(offer).forEach(([key, value]) => {
+      doc.text(`${key}: ${value}`, i * 10, i * 10);
+      i += 1;
+    });
+
+    doc.save('receipt.pdf');
   };
 
   const columns = [
@@ -54,7 +68,7 @@ function Offers() {
       dataIndex: 'offerStatus',
       key: 'offerStatus',
       render: (text, offer) => {
-        if (text === 'PENDING') {
+        if (text === OFFER_STATUS.PENDING) {
           return (
             <button
               onClick={() => handleOfferCancel(offer.id)}
@@ -62,6 +76,18 @@ function Offers() {
               type="button"
             >
               Cancel
+            </button>
+          );
+        }
+
+        if (text === OFFER_STATUS.ACCEPTED) {
+          return (
+            <button
+              onClick={() => handleContractDownload(offer.id)}
+              className="bg-red-500 text-white px-2"
+              type="button"
+            >
+              Download Receipt
             </button>
           );
         }
@@ -77,7 +103,7 @@ function Offers() {
 
   return (
     <div className="px-4 py-5 sm:px-6">
-      <Table columns={columns} dataSource={offers} />
+      <Table columns={columns} dataSource={offers.map((o) => ({ ...o, key: o.id }))} />
     </div>
   );
 }
